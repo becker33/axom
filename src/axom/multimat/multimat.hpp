@@ -79,31 +79,22 @@ public:
 
 private:
   // SLAM Relation typedef
-  using IndBufferType = std::vector<SetPosType>;
-  template <typename T>
-  using IndPolicy = slam::policies::STLVectorIndirection<SetPosType, T>;
+  using IndBufferType = axom::Array<SetPosType>;
   template <typename T>
   using IndViewPolicy = slam::policies::ArrayViewIndirection<SetPosType, T>;
 
   using VariableCardinality =
-    slam::policies::VariableCardinality<SetPosType, IndPolicy<SetElemType>>;
-  using StaticVariableRelationType = slam::StaticRelation<SetPosType,
-                                                          SetElemType,
-                                                          VariableCardinality,
-                                                          IndPolicy<SetElemType>,
-                                                          RangeSetType,
-                                                          RangeSetType>;
+    slam::policies::VariableCardinality<SetPosType, IndViewPolicy<SetElemType>>;
+  using StaticVariableRelationType =
+    slam::StaticRelation<SetPosType,
+                         SetElemType,
+                         VariableCardinality,
+                         IndViewPolicy<SetElemType>,
+                         RangeSetType,
+                         RangeSetType>;
 
   using DynamicVariableRelationType =
     slam::DynamicVariableRelation<RangeSetType, RangeSetType>;
-  using OrderedSetType =
-    slam::OrderedSet<SetPosType,
-                     SetElemType,
-                     slam::policies::RuntimeSize<SetPosType>,
-                     slam::policies::RuntimeOffset<SetPosType>,
-                     slam::policies::StrideOne<SetPosType>,
-                     IndPolicy<SetElemType>,
-                     slam::policies::NoSubset>;
 
   // SLAM Map type
   using MapStrideType = slam::policies::RuntimeStride<SetPosType>;
@@ -154,7 +145,8 @@ public:
   using SubField = MMSubField2D<Field2DType>;
 
   using IndexSet = RangeSetType;  //For returning set of SparseIndex
-  using IdSet = OrderedSetType;   //For returning set of DenseIndex
+  using IdSet =
+    typename StaticVariableRelationType::RelationSubset;  //For returning set of DenseIndex
 
   //Constructors
 
