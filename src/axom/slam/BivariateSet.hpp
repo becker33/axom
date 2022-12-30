@@ -146,8 +146,9 @@ public:
    * \return  The element's FlatIndex
    * \pre   0 <= pos1 <= set1.size() && 0 <= pos2 <= size2.size()
    */
-  virtual PositionType findElementFlatIndex(PositionType pos1,
-                                            PositionType pos2) const = 0;
+  AXOM_HOST_DEVICE virtual PositionType findElementFlatIndex(
+    PositionType pos1,
+    PositionType pos2) const = 0;
 
   /**
    * \brief Searches for the first existing element given the row index (first
@@ -167,7 +168,7 @@ public:
    *
    * \return A range set of the positions in the second set
    */
-  virtual RangeSetType elementRangeSet(PositionType pos1) const = 0;
+  AXOM_HOST_DEVICE virtual RangeSetType elementRangeSet(PositionType pos1) const = 0;
   /**
    * \brief Size of the BivariateSet, which is the number of non-zero entries
    *        in the BivariateSet.
@@ -187,7 +188,7 @@ public:
     return getSize<FirstSetType>(m_set1);
   }
   /** \brief Size of the second set.   */
-  inline PositionType secondSetSize() const
+  AXOM_HOST_DEVICE inline PositionType secondSetSize() const
   {
     return getSize<SecondSetType>(m_set2);
   }
@@ -223,8 +224,9 @@ private:
   }
 
   template <typename SetType>
-  typename std::enable_if<!std::is_abstract<SetType>::value, PositionType>::type
-  getSize(const SetType* s) const
+  AXOM_HOST_DEVICE
+    typename std::enable_if<!std::is_abstract<SetType>::value, PositionType>::type
+    getSize(const SetType* s) const
   {
     SLIC_ASSERT_MSG(s != nullptr, "nullptr in BivariateSet::getSize()");
     return static_cast<SetType>(*s).size();
