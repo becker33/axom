@@ -14,11 +14,15 @@ set(multimat_example_headers
 
 set(multimat_example_sources
     calculate.cpp
+    calculate_gpu.cpp
     traversal.cpp )
 
 set(multimat_tests_depends_on slic slam multimat)
 
-set(multimat_tests_extra_depends)
+# set(multimat_tests_extra_depends)
+
+blt_list_append( TO multimat_tests_calculate_gpu_depends ELEMENTS cuda IF ${ENABLE_CUDA} )
+blt_list_append( TO multimat_tests_calculate_gpu_depends ELEMENTS blt::hip IF ${ENABLE_HIP} )
 
 foreach(example_source ${multimat_example_sources})
     get_filename_component(example_name ${example_source} NAME_WE)
@@ -27,7 +31,8 @@ foreach(example_source ${multimat_example_sources})
         HEADERS     ${multimat_example_headers}
         SOURCES     ${example_source}
         OUTPUT_DIR  ${EXAMPLE_OUTPUT_DIRECTORY}
-        DEPENDS_ON  ${multimat_tests_depends_on} ${multimat_tests_extra_depends}
+        DEPENDS_ON  ${multimat_tests_depends_on}
+                    ${multimat_tests_${example_name}_depends}
         FOLDER      axom/multimat/examples
         )
 
