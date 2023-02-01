@@ -46,7 +46,7 @@ struct ConcreteBivariateSet
   { }
 
   /** \brief Size of the first set.   */
-  inline PositionType firstSetSize() const
+  AXOM_HOST_DEVICE inline PositionType firstSetSize() const
   {
     return getSize<FirstSetType>(m_set1);
   }
